@@ -19,7 +19,7 @@ import requests, bs4
 from bs4 import BeautifulSoup
 
 # target server with portal site to scan
-my_base_url = 'http://mgcmtraining.mass.gov/'
+my_base_url = 'http://www.mass.gov/'
 
 # list of portalized sites
 PortalSites = ['ago', 'anf', 'auditor', 'berkshireda', 'capeda',
