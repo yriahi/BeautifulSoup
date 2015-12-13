@@ -2,12 +2,14 @@
 # File name: BeautifulSoup_Get_Search_Collections.py
 # Author: Youssef Riahi
 # Date created: 12/11/2015
-# Date last modified: 12/11/2015
-# Script version: 1.0
+# Date last modified: 12/13/2015
+# Script version: 1.1
 # Python Version: 2.7.10
 #----------------------------------------------------------------
-# 1.0 - Initial version to find search collections per portal site.
-#     - Target Server/URL is now hardcoded.
+# 1.0 - Initial version to find search collections per '/site'.
+#     - Target Server URL is hardcoded.
+# 1.1 - Added server URL as params.
+# 1.2 - Added error handling for missing params.
 #----------------------------------------------------------------#
 '''
 Description: 
@@ -16,11 +18,9 @@ Description:
 Usage: 
    python BeautifulSoup_Get_Search_Collections.py
 '''
-import requests # an HTTP library
+import requests, sys # an HTTP library and others
 from bs4 import BeautifulSoup # html parser
-
-# target server with portal site to scan
-my_base_url = 'http://www.mass.gov/'
+from sys import argv # building args
 
 # list of portalized sites
 PortalSites = ['ago', 'anf', 'auditor', 'berkshireda', 'capeda',
@@ -32,21 +32,26 @@ PortalSites = ['ago', 'anf', 'auditor', 'berkshireda', 'capeda',
 
 # main function
 def BeautifulSoup_Get_Search_Collections():
-	for PortalSite in PortalSites:
-		# build the url
-		PortalSiteUrl = str(my_base_url) + str(PortalSite)
-		
-		# initiate a requets and get content
-		r = requests.get(PortalSiteUrl)
-		
-		# feed that content to BeautifulSoup and specify a parser
-		soup = BeautifulSoup(r.content, 'html.parser')
-		
-		# the content being searched for is:
-		# <select name="site" id="search_scope">
-		optionz = soup.find_all('select', {'name':'site'})
-		for option in optionz:
-			option_elements = option.find_all('option')
-			print option.get_text()
+	# enure that we have 2 params
+	if len(sys.argv) == 2:		
+		for PortalSite in PortalSites:
+			# build the url
+			PortalSiteUrl = str(my_base_url) + str(PortalSite)
+			
+			# initiate a requets and get content
+			r = requests.get(PortalSiteUrl)
+			
+			# feed that content to BeautifulSoup and specify a parser
+			soup = BeautifulSoup(r.content, 'html.parser')
+			
+			# the content being searched for is:
+			# <select name="site" id="search_scope">
+			optionz = soup.find_all('select', {'name':'site'})
+			for option in optionz:
+				option_elements = option.find_all('option')
+				print option.get_text()
+	else:
+	   # Print usage if missing params
+	   print '\n[ ! ] Usage: python ' + str(sys.argv[0]) + ' http://www.yourwebsite.tld/ \n'
 
 BeautifulSoup_Get_Search_Collections()
