@@ -1,2 +1,2 @@
 # BeautifulSoup
-My Ad Hoc BeautifulSoup python scripts
+A collection of BeautifulSoup python scripts.
